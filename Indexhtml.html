@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FR2.com - Custom Name Email</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #06b6d4, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Mode Selection */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mode-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 220px;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+
+        .mode-card.active {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+        }
+
+        .mode-icon {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .mode-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .mode-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #06b6d4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        /* Name Input Section */
+        .name-section {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .input-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .name-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .name-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 18px;
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            outline: none;
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        .name-input:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+
+        .domain-text {
+            color: #06b6d4;
+            font-weight: 700;
+            font-size: 1.1rem;
+            font-family: monospace;
+        }
+
+        .hint-text {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .success-text {
+            color: #10b981;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Option Toggle */
+        .option-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .option-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .option-btn.active {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+        }
+
+        /* Email Display */
+        .email-display-box {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid #06b6d4;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-display-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .email-address {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: white;
+            word-break: break-all;
+            position: relative;
+            z-index: 1;
+        }
+
+        .email-address .domain {
+            color: #06b6d4;
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-random {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Timer */
+        .timer-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .timer-text {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        /* Inbox */
+        .inbox-container {
+            margin-top: 25px;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .badge {
+            background: #06b6d4;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .email-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .email-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email-item:hover {
+            border-color: #06b6d4;
+            transform: translateX(5px);
+        }
+
+        .email-item.unread {
+            border-left: 3px solid #06b6d4;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .email-body {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #cbd5e1;
+        }
+
+        /* Account Badge */
+        .account-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10b981;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .email-address { font-size: 1.4rem; }
+            .name-input-wrapper { flex-direction: column; align-items: stretch; }
+            .domain-text { text-align: center; }
+            .controls { flex-direction: column; }
+            button { width: 100%; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 class="logo">FR2.COM</h1>
+        <p class="tagline">Custom Name Email Service - Temp & Permanent</p>
+    </header>
+
+    <!-- Mode Selection -->
+    <div class="mode-selector" id="modeSelector">
+        <div class="mode-card active" onclick="switchMode('temp')">
+            <div class="mode-icon">⏱️</div>
+            <div class="mode-title">Temporary</div>
+            <div class="mode-desc">Custom Name + Auto Delete<br>1 Hour Valid</div>
+        </div>
+        <div class="mode-card" onclick="switchMode('perm')">
+            <div class="mode-icon">🔒</div>
+            <div class="mode-title">Permanent</div>
+            <div class="mode-desc">Your Custom Name Forever<br>Password Protected</div>
+        </div>
+    </div>
+
+    <!-- TEMPORARY MODE -->
+    <div id="tempMode" class="main-card">
+        <div class="section-title">⚡ Temporary Email</div>
+        
+        <!-- Options -->
+        <div class="option-toggle">
+            <button class="option-btn active" onclick="setTempOption('random')">🎲 Random Name</button>
+            <button class="option-btn" onclick="setTempOption('custom')">✏️ Custom Name</button>
+        </div>
+
+        <!-- Random View -->
+        <div id="tempRandomView">
+            <div class="email-display-box">
+                <div class="email-address" id="tempRandomEmail">
+                    <span id="tempRandomUser">loading...</span><span class="domain">@fr2.com</span>
+                </div>
+                <div class="controls">
+                    <button class="btn-random" onclick="generateTempRandom()">🎲 New Random</button>
+                    <button class="btn-primary" onclick="copyTempEmail()">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Name View -->
+        <div id="tempCustomView" class="hidden">
+            <div class="name-section">
+                <label class="input-label">Choose Your Temporary Email Name:</label>
+                <div class="name-input-wrapper">
+                    <input type="text" id="tempCustomName" class="name-input" placeholder="e.g. ahmed123" maxlength="20">
+                    <span class="domain-text">@fr2.com</span>
+                </div>
+                <div class="hint-text">✓ Only letters and numbers allowed (a-z, 0-9)</div>
+                <div class="error-text" id="tempError">⚠️ Invalid characters! Use only a-z and 0-9</div>
+                <button class="btn-primary" onclick="setTempCustom()" style="margin-top: 15px; width: 100%;">
+                    ✓ Use This Name
+                </button>
+            </div>
+
+            <div class="email-display-box hidden" id="tempCustomDisplay">
+                <div class="email-address" id="tempCustomEmailDisplay">...</div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="copyTempCustom()">📋 Copy</button>
+                    <button class="btn-secondary" onclick="resetTempCustom()">✏️ Change Name</button>
+                    <button class="btn-danger" onclick="newTempRandom()">🗑️ New Email</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timer-box">
+            <div class="timer-text">⏰ Time remaining: <strong id="tempTimer">60:00</strong></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="tempProgress" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <div class="inbox-container">
+            <div class="inbox-header">
+                <h3>📧 Inbox <span class="badge" id="tempCount">0</span></h3>
+                <button class="btn-secondary" onclick="refreshTempInbox()" style="padding: 6px 12px; font-size: 0.85rem;">🔄 Refresh</button>
+            </div>
+            <div class="email-list" id="tempInbox">
+                <div class="empty-state">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📭</div>
+                    <p>Waiting for emails...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERMANENT MODE -->
+    <div id="permMode" class="main-card hidden">
+        <div class="section-title">🔒 Permanent Email</div>
+        
+        <!-- Auth Section -->
+        <div id="permAuth">
+            <div class="option-toggle">
+                <button class="option-btn active" onclick="showPermCreate()">🆕 Create New</button>
+                <button class="option-btn" onclick="showPermLogin()">🔑 My Account</button>
+            </div>
+
+            <!-- Create Form -->
+            <div id="permCreateForm">
+                <div class="name-section">
+                    <label class="input-label">Choose Your Permanent Email Name:</label>
+                    <div class="name-input-wrapper">
+                        <input type="text" id="permName" class="name-input" placeholder="e.g. ali2024" maxlength="20">
+                        <span class="domain-text">@fr2.com</span>
+                    </div>
+                    <div class="hint-text">✓ This will be yours forever! Only a-z, 0-9 allowed</div>
+                    <div class="error-text" id="permNameError">⚠️ Invalid characters!</div>
+                </div>
+
+                <div class="name-section" style="margin-top: 15px;">
+                    <label class="input-label">Set Password (to secure your email):</label>
+                    <input type="password" id="permPass" class="name-input" placeholder="Min 6 characters" style="width: 100%;">
+                </div>
+
+                <div class="error-text" id="permError" style="margin-top: 10px;"></div>
+                <div class="success-text" id="permSuccess" style="margin-top: 10px;"></div>
+
+                <button class="btn-success" onclick="createPermAccount()" style="width: 100%; margin-top: 15px;">
+                    🚀 Create My Permanent Email
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="permLoginForm" class="hidden">
+                <div class="name-section">
+                    <label class="input-label">Your Email Name:</label>
+                    <div class="name-input-wrapper">
+                        <input type="text" id="loginName" class="name-input" placeholder="Your username">
+                        <span class="domain-text">@fr2.com</span>
+                    </div>
+                </div>
+
+                <div class="name-section" style="margin-top: 15px;">
+                    <label class="input-label">Password:</label>
+                    <input type="password" id="loginPass" class="name-input" placeholder="Your password" style="width: 100%;">
+                </div>
+
+                <div class="error-text" id="loginError" style="margin-top: 10px;"></div>
+
+                <button class="btn-primary" onclick="loginPermAccount()" style="width: 100%; margin-top: 15px;">
+                    🔓 Open My Inbox
+                </button>
+            </div>
+        </div>
+
+        <!-- Inbox Section -->
+        <div id="permInboxSection" class="hidden">
+            <div class="account-badge">
+                <span>✓</span>
+                <span>Permanent Account Active</span>
+            </div>
+
+            <div class="email-display-box">
+                <div class="email-address" id="permEmailDisplay">...</div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="copyPermEmail()">📋 Copy</button>
+                    <button class="btn-secondary" onclick="refreshPermInbox()">🔄 Refresh</button>
+                    <button class="btn-danger" onclick="logoutPerm()">Logout</button>
+                </div>
+            </div>
+
+            <div class="inbox-container">
+                <div class="inbox-header">
+                    <h3>📧 Permanent Inbox <span class="badge" id="permCount">0</span></h3>
+                </div>
+                <div class="email-list" id="permInboxList">
+                    <div class="empty-state">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📭</div>
+                        <p>No emails yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email Modal -->
+<div class="modal" id="emailModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📧 Email Details</h3>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="color: #94a3b8; font-size: 0.85rem;">From:</div>
+            <div id="modalFrom" style="font-weight: 600; color: white;"></div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div style="color: #94a3b8; font-size: 0.85rem;">Subject:</div>
+            <div id="modalSubject" style="font-weight: 600; color: white;"></div>
+        </div>
+        <div>
+            <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 8px;">Content:</div>
+            <div class="email-body" id="modalBody"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // ============== TEMPORARY MODE ==============
+    let tempTimer = 3600;
+    let tempInterval;
+    let tempEmails = [];
+    let currentTempMode = 'random'; // 'random' or 'custom'
+    let currentTempEmail = '';
+
+    function initTemp() {
+        generateTempRandom();
+        startTempTimer();
+        // Simulate incoming emails
+        setInterval(() => {
+            if (Math.random() > 0.7) simulateTempEmail();
+        }, 12000);
+    }
+
+    function setTempOption(option) {
+        currentTempMode = option;
+        document.querySelectorAll('#tempMode .option-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (option === 'random') {
+            document.getElementById('tempRandomView').classList.remove('hidden');
+            document.getElementById('tempCustomView').classList.add('hidden');
+            generateTempRandom();
+        } else {
+            document.getElementById('tempRandomView').classList.add('hidden');
+            document.getElementById('tempCustomView').classList.remove('hidden');
+            document.getElementById('tempCustomDisplay').classList.add('hidden');
+            document.getElementById('tempCustomName').value = '';
+            document.getElementById('tempError').style.display = 'none';
+        }
+    }
+
+    function generateTempRandom() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let name = '';
+        for (let i = 0; i < 10; i++) name += chars.charAt(Math.floor(Math.random() * chars.length));
+        
+        currentTempEmail = name + '@fr2.com';
+        document.getElementById('tempRandomUser').textContent = name;
+        resetTempTimer();
+        clearTempInbox();
+        showToast('🎲 Random email generated: ' + name);
+    }
+
+    function setTempCustom() {
+        const input = document.getElementById('tempCustomName');
+        const name = input.value.trim().toLowerCase();
+        const error = document.getElementById('tempError');
+
+        if (!name) {
+            error.textContent = '⚠️ Please enter a name!';
+            error.style.display = 'flex';
+            return;
+        }
+
+        if (!/^[a-z0-9]+$/.test(name)) {
+            error.textContent = '⚠️ Only a-z and 0-9 allowed!';
+            error.style.display = 'flex';
+            return;
+        }
+
+        if (name.length < 3) {
+            error.textContent = '⚠️ Minimum 3 characters!';
+            error.style.display = 'flex';
+            return;
+        }
+
+        error.style.display = 'none';
+        currentTempEmail = name + '@fr2.com';
+        
+        document.getElementById('tempCustomEmailDisplay').innerHTML = 
+            `${name}<span class="domain">@fr2.com</span>`;
+        document.getElementById('tempCustomDisplay').classList.remove('hidden');
+        
+        resetTempTimer();
+        clearTempInbox();
+        showToast('✓ Custom email set: ' + name);
+    }
+
+    // Real-time validation
+    document.getElementById('tempCustomName')?.addEventListener('input', function(e) {
+        e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        document.getElementById('tempError').style.display = 'none';
+    });
+
+    function resetTempCustom() {
+        document.getElementById('tempCustomDisplay').classList.add('hidden');
+        document.getElementById('tempCustomName').value = '';
+        document.getElementById('tempCustomName').focus();
+    }
+
+    function copyTempEmail() {
+        navigator.clipboard.writeText(currentTempEmail);
+        showToast('📋 Copied: ' + currentTempEmail);
+    }
+
+    function copyTempCustom() {
+        navigator.clipboard.writeText(currentTempEmail);
+        showToast('📋 Copied: ' + currentTempEmail);
+    }
+
+    function newTempRandom() {
+        setTempOption('random');
+        document.querySelectorAll('#tempMode .option-btn')[0].classList.add('active');
+        document.querySelectorAll('#tempMode .option-btn')[1].classList.remove('active');
+        generateTempRandom();
+    }
+
+    function resetTempTimer() {
+        tempTimer = 3600;
+        if (tempInterval) clearInterval(tempInterval);
+        startTempTimer();
+    }
+
+    function startTempTimer() {
+        tempInterval = setInterval(() => {
+            if (tempTimer > 0) {
+                tempTimer--;
+                const mins = Math.floor(tempTimer / 60);
+                const secs = tempTimer % 60;
+                document.getElementById('tempTimer').textContent = 
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                document.getElementById('tempProgress').style.width = (tempTimer / 3600 * 100) + '%';
+            } else {
+                if (currentTempMode === 'random') {
+                    generateTempRandom();
+                } else {
+                    showToast('⏰ Time expired! Switching to random...');
+                    setTempOption('random');
+                }
+            }
+        }, 1000);
+    }
+
+    function simulateTempEmail() {
+        const senders = ['verify@amazon.com', 'team@github.com', 'hello@netflix.com'];
+        const subjects = ['Your code: 584921', 'Verify email', 'Welcome aboard'];
+        
+        tempEmails.unshift({
+            from: senders[Math.floor(Math.random() * senders.length)],
+            subject: subjects[Math.floor(Math.random() * subjects.length)],
+            time: new Date().toLocaleTimeString(),
+            body: 'This is a demo email content for your temporary inbox.'
+        });
+        updateTempInbox();
+    }
+
+    function updateTempInbox() {
+        const list = document.getElementById('tempInbox');
+        document.getElementById('tempCount').textContent = tempEmails.length;
+        
+        if (tempEmails.length === 0) {
+            list.innerHTML = `<div class="empty-state"><div style="font-size: 2rem; margin-bottom: 10px;">📭</div><p>Waiting for emails...</p></div>`;
+            return;
+        }
+
+        list.innerHTML = tempEmails.map((email, idx) => `
+            <div class="email-item" onclick="viewTempEmail(${idx})">
+                <div>
+                    <div style="font-weight: 600; color: white;">${email.from}</div>
+                    <div style="color: #94a3b8; font-size: 0.9rem;">${email.subject}</div>
+                </div>
+                <div style="color: #64748b; font-size: 0.85rem;">${email.time}</div>
+            </div>
+        `).join('');
+    }
+
+    function viewTempEmail(idx) {
+        const email = tempEmails[idx];
+        document.getElementById('modalFrom').textContent = email.from;
+        document.getElementById('modalSubject').textContent = email.subject;
+        document.getElementById('modalBody').textContent = email.body;
+        document.getElementById('emailModal').classList.add('active');
+    }
+
+    function clearTempInbox() {
+        tempEmails = [];
+        updateTempInbox();
+    }
+
+    function refreshTempInbox() {
+        showToast('🔄 Refreshed');
+        setTimeout(() => simulateTempEmail(), 500);
+    }
+
+    // ============== PERMANENT MODE ==============
+    const API_BASE = 'https://api.mail.tm';
+    let permToken = null;
+    let permEmail = null;
+    let permRefreshInterval = null;
+
+    // Validation for permanent name input
+    document.getElementById('permName')?.addEventListener('input', function(e) {
+        e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        document.getElementById('permNameError').style.display = 'none';
+    });
+
+    function showPermCreate() {
+        document.getElementById('permCreateForm').classList.remove('hidden');
+        document.getElementById('permLoginForm').classList.add('hidden');
+        document.querySelectorAll('#permMode .option-btn')[0].classList.add('active');
+        document.querySelectorAll('#permMode .option-btn')[1].classList.remove('active');
+    }
+
+    function showPermLogin() {
+        document.getElementById('permCreateForm').classList.add('hidden');
+        document.getElementById('permLoginForm').classList.remove('hidden');
+        document.querySelectorAll('#permMode .option-btn')[0].classList.remove('active');
+        document.querySelectorAll('#permMode .option-btn')[1].classList.add('active');
+    }
+
+    async function createPermAccount() {
+        const name = document.getElementById('permName').value.trim().toLowerCase();
+        const pass = document.getElementById('permPass').value;
+        const error = document.getElementById('permError');
+        const success = document.getElementById('permSuccess');
+
+        if (!name || !pass) {
+            error.textContent = '⚠️ Please fill all fields!';
+            error.style.display = 'flex';
+            success.style.display = 'none';
+            return;
+        }
+
+        if (pass.length < 6) {
+            error.textContent = '⚠️ Password must be 6+ characters!';
+            error.style.display = 'flex';
+            success.style.display = 'none';
+            return;
+        }
+
+        error.style.display = 'none';
+        success.textContent = '⏳ Creating your permanent email...';
+        success.style.display = 'flex';
+
+        try {
+            // Get domain from API
+            const domainRes = await fetch(`${API_BASE}/domains`);
+            const domains = await domainRes.json();
+            const domain = domains['hydra:member'][0].domain;
+            const email = `${name}@${domain}`;
+
+            // Create account
+            const res = await fetch(`${API_BASE}/accounts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ address: email, password: pass })
+            });
+
+            if (res.ok) {
+                // Save to localStorage
+                localStorage.setItem('fr2_perm', JSON.stringify({email, password: pass, name}));
+                success.textContent = '✅ Success! Opening inbox...';
+                setTimeout(() => loadPermInbox(email, pass), 1000);
+            } else {
+                const err = await res.json();
+                error.textContent = '⚠️ ' + (err.detail?.includes('exists') ? 'Name already taken!' : (err.detail || 'Error occurred'));
+                error.style.display = 'flex';
+                success.style.display = 'none';
+            }
+        } catch (e) {
+            error.textContent = '⚠️ Network error! Try again.';
+            error.style.display = 'flex';
+            success.style.display = 'none';
+        }
+    }
+
+    async function loginPermAccount() {
+        const name = document.getElementById('loginName').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        const error = document.getElementById('loginError');
+
+        if (!name || !pass) {
+            error.textContent = '⚠️ Enter name and password!';
+            error.style.display = 'flex';
+            return;
+        }
+
+        const email = name.includes('@') ? name : `${name}@mail.tm`;
+
+        try {
+            const res = await fetch(`${API_BASE}/token`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ address: email, password: pass })
+            });
+
+            if (res.ok) {
+                localStorage.setItem('fr2_perm', JSON.stringify({email, password: pass, name}));
+                loadPermInbox(email, pass);
+            } else {
+                error.textContent = '⚠️ Wrong name or password!';
+                error.style.display = 'flex';
+            }
+        } catch (e) {
+            error.textContent = '⚠️ Network error!';
+            error.style.display = 'flex';
+        }
+    }
+
+    async function loadPermInbox(email, password) {
+        try {
+            const tokenRes = await fetch(`${API_BASE}/token`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ address: email, password: password })
+            });
+            const tokenData = await tokenRes.json();
+            permToken = tokenData.token;
+            permEmail = email;
+
+            document.getElementById('permAuth').classList.add('hidden');
+            document.getElementById('permInboxSection').classList.remove('hidden');
+            
+            const displayName = email.split('@')[0];
+            document.getElementById('permEmailDisplay').innerHTML = 
+                `${displayName}<span class="domain">@fr2.com</span>`;
+
+            fetchPermEmails();
+            permRefreshInterval = setInterval(fetchPermEmails, 10000);
+            showToast('✅ Permanent inbox loaded!');
+        } catch (e) {
+            showToast('❌ Failed to load');
+        }
+    }
+
+    async function fetchPermEmails() {
+        try {
+            const res = await fetch(`${API_BASE}/messages`, {
+                headers: { 'Authorization': `Bearer ${permToken}` }
+            });
+            const data = await res.json();
+            const emails = data['hydra:member'] || [];
+            
+            document.getElementById('permCount').textContent = emails.length;
+            const list = document.getElementById('permInboxList');
+
+            if (emails.length === 0) {
+                list.innerHTML = `<div class="empty-state"><div style="font-size: 2rem; margin-bottom: 10px;">📭</div><p>No emails yet</p><p style="margin-top: 5px; font-size: 0.9rem;">Send test email to ${permEmail}</p></div>`;
+                return;
+            }
+
+            list.innerHTML = emails.map(email => `
+                <div class="email-item ${email.seen ? '' : 'unread'}" onclick="viewPermEmail('${email.id}')">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; color: white;">${email.from.name || email.from.address}</div>
+                        <div style="color: #94a3b8; font-size: 0.9rem; text-overflow: ellipsis; overflow: hidden;">${email.subject || '(No subject)'}</div>
+                    </div>
+                    <div style="color: #64748b; font-size: 0.8rem; white-space: nowrap;">${new Date(email.createdAt).toLocaleDateString()}</div>
+                </div>
+            `).join('');
+        } catch (e) {
+            console.error('Error fetching emails');
+        }
+    }
+
+    async function viewPermEmail(id) {
+        try {
+            const res = await fetch(`${API_BASE}/messages/${id}`, {
+                headers: { 'Authorization': `Bearer ${permToken}` }
+            });
+            const email = await res.json();
+            
+            document.getElementById('modalFrom').textContent = email.from.address;
+            document.getElementById('modalSubject').textContent = email.subject || '(No subject)';
+            document.getElementById('modalBody').textContent = email.text || email.html || '(No content)';
+            document.getElementById('emailModal').classList.add('active');
+        } catch (e) {
+            showToast('❌ Cannot open email');
+        }
+    }
+
+    function copyPermEmail() {
+        navigator.clipboard.writeText(permEmail);
+        showToast('📋 Copied: ' + permEmail);
+    }
+
+    function refreshPermInbox() {
+        fetchPermEmails();
+        showToast('🔄 Refreshed');
+    }
+
+    function logoutPerm() {
+        if (permRefreshInterval) clearInterval(permRefreshInterval);
+        localStorage.removeItem('fr2_perm');
+        permToken = null;
+        permEmail = null;
+        
+        document.getElementById('permInboxSection').classList.add('hidden');
+        document.getElementById('permAuth').classList.remove('hidden');
+        showPermCreate();
+        showToast('👋 Logged out');
+    }
+
+    // ============== GENERAL ==============
+    function switchMode(mode) {
+        document.querySelectorAll('.mode-card').forEach(c => {
+            c.classList.remove('active');
+            if (c.onclick.toString().includes(mode)) c.classList.add('active');
+        });
+
+        if (mode === 'temp') {
+            document.getElementById('tempMode').classList.remove('hidden');
+            document.getElementById('permMode').classList.add('hidden');
+        } else {
+            document.getElementById('tempMode').classList.add('hidden');
+            document.getElementById('permMode').classList.remove('hidden');
+            
+            // Check saved login
+            const saved = localStorage.getItem('fr2_perm');
+            if (saved) {
+                const acc = JSON.parse(saved);
+                loadPermInbox(acc.email, acc.password);
+            }
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('emailModal').classList.remove('active');
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+    }
+
+    // Initialize
+    initTemp();
+
+    // Auto-login check
+    window.addEventListener('load', () => {
+        const saved = localStorage.getItem('fr2_perm');
+        if (saved) {
+            const badge = document.createElement('div');
+            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;';
+            badge.textContent = '✓ Saved';
+            document.querySelectorAll('.mode-card')[1].style.position = 'relative';
+            document.querySelectorAll('.mode-card')[1].appendChild(badge);
+        }
+    });
+
+    // Close modal on outside click
+    document.getElementById('emailModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>
+
+</body>
+</html>
